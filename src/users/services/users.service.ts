@@ -12,15 +12,15 @@ export class UsersService {
     this.users = {}
   }
 
-  findOne(userId: string): User {
-    return this.users[ userId ];
+  findOne(name: string): User {
+    return this.users[ name ];
   }
 
   createOne({ name, password }: User): User {
     const id = v4(v4());
-    const newUser = { id: name || id, name, password };
+    const newUser = { id, name, password };
 
-    this.users[ id ] = newUser;
+    this.users[ name ] = newUser;
 
     return newUser;
   }
