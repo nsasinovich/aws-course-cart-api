@@ -4,15 +4,15 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TABLE IF NOT EXISTS carts (
     id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id uuid NOT NULL,
-    created_at date NOT NULL,
-    updated_at date NOT NULL
+    created_at date NOT NULL DEFAULT CURRENT_DATE,
+    updated_at date NOT NULL DEFAULT CURRENT_DATE
 );
 
 CREATE TABLE IF NOT EXISTS cart_items (
     product_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     cart_id uuid NOT NULL,
     count INTEGER NOT NULL,
-    FOREIGN KEY ("cart_id") REFERENCES carts ("id")
+    FOREIGN KEY ("cart_id") REFERENCES carts ("id") ON DELETE CASCADE
 );
 
 -- SEEDING --

@@ -18,12 +18,12 @@ export class CartController {
   // @UseGuards(JwtAuthGuard)
   @UseGuards(BasicAuthGuard)
   @Get()
-  findUserCart(@Req() req: AppRequest) {
+  async findUserCart(@Req() req: AppRequest) {
     const userId = getUserIdFromRequest(req);
 
-    console.log('TEST:userId:', userId);
+    console.log('findUserCart:userId:', userId);
 
-    const cart = this.cartService.findOrCreateByUserId(userId);
+    const cart = await this.cartService.findOrCreateByUserId(userId);
 
     return {
       statusCode: HttpStatus.OK,
@@ -33,10 +33,14 @@ export class CartController {
   }
 
   // @UseGuards(JwtAuthGuard)
-  // @UseGuards(BasicAuthGuard)
+  @UseGuards(BasicAuthGuard)
   @Put()
-  updateUserCart(@Req() req: AppRequest, @Body() body) { // TODO: validate body payload...
-    const cart = this.cartService.updateByUserId(getUserIdFromRequest(req), body)
+  async updateUserCart(@Req() req: AppRequest, @Body() body) {
+    const userId = getUserIdFromRequest(req);
+
+    console.log('updateUserCart:userId: ', userId);
+
+    const cart = await this.cartService.updateByUserId(userId, body);
 
     return {
       statusCode: HttpStatus.OK,
@@ -49,10 +53,14 @@ export class CartController {
   }
 
   // @UseGuards(JwtAuthGuard)
-  // @UseGuards(BasicAuthGuard)
+  @UseGuards(BasicAuthGuard)
   @Delete()
-  clearUserCart(@Req() req: AppRequest) {
-    this.cartService.removeByUserId(getUserIdFromRequest(req));
+  async clearUserCart(@Req() req: AppRequest) {
+    const userId = getUserIdFromRequest(req);
+
+    console.log('clearUserCart:userId:', userId);
+
+    await this.cartService.removeByUserId(userId);
 
     return {
       statusCode: HttpStatus.OK,
@@ -61,11 +69,14 @@ export class CartController {
   }
 
   // @UseGuards(JwtAuthGuard)
-  // @UseGuards(BasicAuthGuard)
+  @UseGuards(BasicAuthGuard)
   @Post('checkout')
-  checkout(@Req() req: AppRequest, @Body() body) {
+  async checkout(@Req() req: AppRequest, @Body() body) {
     const userId = getUserIdFromRequest(req);
-    const cart = this.cartService.findByUserId(userId);
+
+    console.log('checkout:userId:', userId);
+
+    const cart = await this.cartService.findByUserId(userId);
 
     if (!(cart && cart.items.length)) {
       const statusCode = HttpStatus.BAD_REQUEST;
@@ -86,7 +97,7 @@ export class CartController {
       items,
       total,
     });
-    this.cartService.removeByUserId(userId);
+    await this.cartService.removeByUserId(userId);
 
     return {
       statusCode: HttpStatus.OK,
