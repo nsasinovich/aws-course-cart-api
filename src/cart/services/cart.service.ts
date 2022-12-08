@@ -37,8 +37,8 @@ export class CartService {
     }, []);
 
     return {
-      items,
       id: response.rows[0].id,
+      items,
     };
   }
 
