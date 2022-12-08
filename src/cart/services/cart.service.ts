@@ -24,7 +24,7 @@ export class CartService {
      [userId]
      );
 
-    if (response.rowCount === 0) {
+    if (!response.rowCount) {
       return null;
     }
 

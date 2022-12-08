@@ -8,17 +8,7 @@ import { User } from '../models';
 
 @Injectable()
 export class UsersService {
-  private readonly users: Record<string, User>;
-
-  constructor(@Inject(PG_CLIENT) private pg: Client) {
-    this.users = {
-      'nsasinovich': {
-        name: 'nsasinovich',
-        password: 'password',
-        id: '191ed943-d596-48ca-aabc-febd40184bba'
-      }
-    }
-  }
+  constructor(@Inject(PG_CLIENT) private pg: Client) {}
 
   async findOne(name: string): Promise<User> {
     const response = await this.pg.query<User>(
@@ -34,7 +24,7 @@ export class UsersService {
       [name]
     );
 
-    if(response.rowCount === 0) {
+    if(!response.rowCount) {
       return null;
     }
 
